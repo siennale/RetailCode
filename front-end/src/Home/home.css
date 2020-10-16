@@ -1,0 +1,16 @@
+
+#page {
+    display: flex;
+    /* calculate the height. Header is 30px */
+  }
+  
+  #sideBar {
+    width: 30vw;
+    border-right: 5px solid black;
+    height: 90vh;
+  }
+  
+  #content {
+    flex: 1 0 auto;
+    /* enable grow, disable shrink */
+  }
