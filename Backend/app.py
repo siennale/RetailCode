@@ -1,4 +1,6 @@
 print ("Hello world")
+import psycopg2
+
 
 import flask
 

@@ -4,18 +4,17 @@ import './home.css';
 import Navbar from 'react-bootstrap/Navbar'
 import BarcodeReader from 'react-barcode-reader'
 
-
 class Home extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            result: 'No result',
+            barcode: 'Please Scan Barcode for Price',
+            price: 10
         }
 
         this.handleScan = this.handleScan.bind(this)
     }
-
 
     handleScan(data) {
         this.setState({
@@ -29,33 +28,39 @@ class Home extends Component {
     render() {
         return (
             <div className="Home">
-                <Navbar bg="dark">
+                <Navbar class="navbar" bg="dark">
                     <Navbar.Brand href="#home">
+                        <div class="navbar-font">Welcome to the portal</div>
                     </Navbar.Brand>
                 </Navbar>
-
 
                 <div id="page">
 
                     <div id="sideBar">
-                        add billing items here
+                        Billing Items
                     </div>
+
                     <div id="content">
-                        price of the barcode scanned
-                    </div>
-                    <div>
-                        <BarcodeReader
-                            onError={this.handleError}
-                            onScan={this.handleScan}
-                        />
-                        <p>{this.state.result}</p>
+                        <div class="inner-content">
+                            <p class="welcome-message">Price of the Product</p>
+                            <div class="inner-box">
+                                <p class="price-box">
+                                    <BarcodeReader
+                                        onError={this.handleError}
+                                        onScan={this.handleScan}
+                                    />
+                                    <div>{this.state.barcode}</div>
+                                    <br></br>
+                                    <div class="original-price">${this.state.price}</div>
+                                    <br></br>
+                                    <div> GST${(this.state.price * 0.05 + this.state.price).toFixed(2)}, GST+PST ${(this.state.price * 0.12 + this.state.price).toFixed(2)} </div>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-
             </div>
         );
     }
 }
-
 export default Home;

@@ -1,16 +1,62 @@
-
 #page {
     display: flex;
     /* calculate the height. Header is 30px */
-  }
-  
-  #sideBar {
+}
+
+.navbar {
+    height: 5vh;
+}
+
+.navbar-font {
+    padding-top: 4px;
+    color: white;
+}
+
+#sideBar {
     width: 30vw;
     border-right: 5px solid black;
-    height: 90vh;
-  }
-  
-  #content {
+    height: 95vh;
+}
+
+#content {
     flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     /* enable grow, disable shrink */
-  }
+}
+
+/* .original-price {
+} */
+
+.inner-box {
+    flex: 0 0 100%;
+    /* padding: .5rem;
+    height: 300px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+    border-radius: 4px;
+  
+    color: #84613D; */
+    font-family: "Lucida Console", Monaco, monospace;
+    /* border-bottom: 1px solid #F9F2D6;
+    border-right: 1px solid #F9F2D6; */
+}
+
+.price-box {
+    text-align: center;
+    font-size: 35px;
+    color: black;
+    font-family: "Lucida Console", Monaco, monospace;
+    border: 1px solid black;
+    padding: 20px;
+}
+
+.welcome-message {
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    font-family: "Lucida Console", Monaco, monospace;
+    border-radius: 15px 15px;
+    background: blueviolet;
+    padding: 20px;
+}
