@@ -1,18 +1,80 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sqlite3
+from sqlite3 import Error
+
+# connect db
+def create_connection(db_file):
+    """ create a database connection to a SQLite database """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
 
 
-# Create a tables 
-def create_tables():
-	# Create tables 
+if __name__ == '__main__':
+    create_connection('retail.db')
+
+# Initilize DB
+def initilaize_db():
+
+	with conn:
+        c = conn.cursor()
+
+        c.execute("""CREATE TABLE Users (
+        				user_id TEXT PRIMARY KEY,
+        				name TEXT,
+        				password TEXT
+        )""")
+
+        c.execute("""CREATE TABLE Products (
+                        product_id INTEGER PRIMARY KEY,
+                        product_barcode INTEGER,
+                        product_name TEXT,
+                        product_selling_price REAL,
+                        product_total_quantity INTEGER,
+                        product_sold_quantity INTEGER,
+                        product_instock_quantity INTEGER	
+        )""")
+
+        c.execute("""CREATE TABLE ProductsIn (
+                        product_id INTEGER PRIMARY KEY,
+                        product_barcode INTEGER,
+                        order_place TEXT,
+                        order_quantity INTEGER,
+                        product_purchase_price REAL
+        )""")
+
+        c.execute("""CREATE TABLE Transactions (
+                        transaction_id INTEGER PRIMARY KEY,
+                        user_id TEXT,
+                        date TEXT,
+                        transaction_total REAL,
+                        bills_offered REAL
+        )""")
+
+        c.execute("""CREATE TABLE SoldItems (
+                        id INTEGER PRIMARY KEY,
+                        product_barcode INTEGER,
+                        product_selling_price INTEGER,
+                        quantity INTEGER
+ 
+        )""")
 
 
-
-
-
-
-
+def insert_db(conn):
+    with conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO Users VALUES (?, ?, ?, ?)", ('userid', 'name', 'password'))
+        c.execute("INSERT INTO Products VALUES (?, ?, ?, ?, ?,?,?)", (0, 0, 'name', 0, 0, 0, 0, 0))
+        c.execute("INSERT INTO ProductsIn VALUES (?, ?, ?, ?, ?)", (0, 0, 'product', 0, 0, 0))
+        c.execute("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)", (0, 'userid', 'date', 0, 0))
+        c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
 
 
 
