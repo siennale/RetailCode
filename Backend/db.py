@@ -5,87 +5,81 @@ from sqlite3 import Error
 
 # connect db
 def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
+	""" create a database connection to a SQLite database """
+	conn = None
+	try:
+		conn = sqlite3.connect(db_file)
+		print("Connected to DB :" + sqlite3.version)
+		return conn
+	except Error as e:
+		print(e)
 
 # Initialize DB
 def initialize_db(conn):
 
-	commands = [("""CREATE TABLE Users (
-        	user_id TEXT PRIMARY KEY,
-        	name TEXT,
-        	password TEXT
-        )"""),
+	commands = [("""CREATE TABLE IF NOT EXISTS Users (
+			user_id TEXT PRIMARY KEY,
+			name TEXT,
+			password TEXT
+		)"""),
 
-        ("""CREATE TABLE Products (
-        	product_id INTEGER PRIMARY KEY,
-            product_barcode INTEGER,
-            product_name TEXT,
-            product_selling_price REAL,
-            product_total_quantity INTEGER,
-            product_sold_quantity INTEGER,
-            product_instock_quantity INTEGER	
-        )"""),
+		("""CREATE TABLE IF NOT EXISTS Products (
+			product_id INTEGER PRIMARY KEY,
+			product_barcode INTEGER,
+			product_name TEXT,
+			product_selling_price REAL,
+			product_total_quantity INTEGER,
+			product_sold_quantity INTEGER,
+			product_instock_quantity INTEGER	
+		)"""),
 
-        # when products in, update products
-        ("""CREATE TABLE ProductsIn (
-            product_id INTEGER PRIMARY KEY,
-            product_barcode INTEGER,
-            order_place TEXT,
-            order_quantity INTEGER,
-            product_purchase_price REAL,
-            FOREIGN KEY (product_id) REFERENCES Products(product_id)
-        )"""),
+		# when products in, update products
+		("""CREATE TABLE IF NOT EXISTS ProductsIn (
+			product_id INTEGER PRIMARY KEY,
+			product_barcode INTEGER,
+			order_place TEXT,
+			order_quantity INTEGER,
+			product_purchase_price REAL,
+			FOREIGN KEY (product_id) REFERENCES Products(product_id)
+		)"""),
 
-        # when products out, update products
-        ("""CREATE TABLE SoldItems (
-            product_id INTEGER PRIMARY KEY,
-            product_barcode INTEGER,
-            product_selling_price INTEGER,
-            quantity INTEGER,
-            FOREIGN KEY (product_id) REFERENCES Products(product_id)
-        )"""),
+		# when products out, update products
+		("""CREATE TABLE IF NOT EXISTS SoldItems (
+			product_id INTEGER PRIMARY KEY,
+			product_barcode INTEGER,
+			product_selling_price INTEGER,
+			quantity INTEGER,
+			FOREIGN KEY (product_id) REFERENCES Products(product_id)
+		)"""),
 
-        ("""CREATE TABLE Transactions (
-            transaction_id INTEGER PRIMARY KEY,
-            user_id TEXT,
-            date TEXT,
-            transaction_total REAL,
-            bills_offered REAL,
-            FOREIGN KEY (user_id) REFERENCES Users(user_id)
-        )""")]
-
-        with conn:
-        	c = conn.cursor()
-
-        	for command in commands:
-        	c.execute(command)
-
-
-
+		("""CREATE TABLE IF NOT EXISTS Transactions (
+			transaction_id INTEGER PRIMARY KEY,
+			user_id TEXT,
+			date TEXT,
+			transaction_total REAL,
+			bills_offered REAL,
+			FOREIGN KEY (user_id) REFERENCES Users(user_id)
+		)""")]
+	with conn:
+		c = conn.cursor()
+		for command in commands:
+			c.execute(command)
 
 
 def insert_db(conn):
-    with conn:
-        c = conn.cursor()
-        c.execute("INSERT INTO Users VALUES (?, ?, ?, ?)", ('userid', 'name', 'password'))
-        c.execute("INSERT INTO Products VALUES (?, ?, ?, ?, ?,?,?)", (0, 0, 'name', 0, 0, 0, 0, 0))
-        c.execute("INSERT INTO ProductsIn VALUES (?, ?, ?, ?, ?)", (0, 0, 'product', 0, 0, 0))
-        c.execute("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)", (0, 'userid', 'date', 0, 0))
-        c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
+	with conn:
+		c = conn.cursor()
+		c.execute("INSERT INTO Users VALUES (?, ?, ?, ?)", ('userid', 'name', 'password'))
+		c.execute("INSERT INTO Products VALUES (?, ?, ?, ?, ?,?,?)", (0, 0, 'name', 0, 0, 0, 0, 0))
+		c.execute("INSERT INTO ProductsIn VALUES (?, ?, ?, ?, ?)", (0, 0, 'product', 0, 0, 0))
+		c.execute("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)", (0, 'userid', 'date', 0, 0))
+		c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
 
 
 if __name__ == '__main__':
-    conn = create_connection('retail.db')
-    initialize_db(conn)
+	conn = create_connection('retail.db')
+	initialize_db(conn)
+
 
 
 
