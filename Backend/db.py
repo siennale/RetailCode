@@ -16,55 +16,61 @@ def create_connection(db_file):
         if conn:
             conn.close()
 
-
-if __name__ == '__main__':
-    create_connection('retail.db')
-
 # Initilize DB
-def initilaize_db():
+def initilize_db(conn):
 
-	with conn:
-        c = conn.cursor()
+	commands = [("""CREATE TABLE Users (
+        	user_id TEXT PRIMARY KEY,
+        	name TEXT,
+        	password TEXT
+        )"""),
 
-        c.execute("""CREATE TABLE Users (
-        				user_id TEXT PRIMARY KEY,
-        				name TEXT,
-        				password TEXT
-        )""")
+        ("""CREATE TABLE Products (
+        	product_id INTEGER PRIMARY KEY,
+            product_barcode INTEGER,
+            product_name TEXT,
+            product_selling_price REAL,
+            product_total_quantity INTEGER,
+            product_sold_quantity INTEGER,
+            product_instock_quantity INTEGER	
+        )"""),
 
-        c.execute("""CREATE TABLE Products (
-                        product_id INTEGER PRIMARY KEY,
-                        product_barcode INTEGER,
-                        product_name TEXT,
-                        product_selling_price REAL,
-                        product_total_quantity INTEGER,
-                        product_sold_quantity INTEGER,
-                        product_instock_quantity INTEGER	
-        )""")
+        # when products in, update products
+        ("""CREATE TABLE ProductsIn (
+            product_id INTEGER PRIMARY KEY,
+            product_barcode INTEGER,
+            order_place TEXT,
+            order_quantity INTEGER,
+            product_purchase_price REAL,
+            FOREIGN KEY (product_id) REFERENCES Products(product_id)
+        )"""),
 
-        c.execute("""CREATE TABLE ProductsIn (
-                        product_id INTEGER PRIMARY KEY,
-                        product_barcode INTEGER,
-                        order_place TEXT,
-                        order_quantity INTEGER,
-                        product_purchase_price REAL
-        )""")
+        # when products out, update products
+        ("""CREATE TABLE SoldItems (
+            product_id INTEGER PRIMARY KEY,
+            product_barcode INTEGER,
+            product_selling_price INTEGER,
+            quantity INTEGER,
+            FOREIGN KEY (product_id) REFERENCES Products(product_id)
+        )"""),
 
-        c.execute("""CREATE TABLE Transactions (
-                        transaction_id INTEGER PRIMARY KEY,
-                        user_id TEXT,
-                        date TEXT,
-                        transaction_total REAL,
-                        bills_offered REAL
-        )""")
+        ("""CREATE TABLE Transactions (
+            transaction_id INTEGER PRIMARY KEY,
+            user_id TEXT,
+            date TEXT,
+            transaction_total REAL,
+            bills_offered REAL,
+            FOREIGN KEY (user_id) REFERENCES Users(user_id)
+        )""")]
 
-        c.execute("""CREATE TABLE SoldItems (
-                        id INTEGER PRIMARY KEY,
-                        product_barcode INTEGER,
-                        product_selling_price INTEGER,
-                        quantity INTEGER
- 
-        )""")
+        with conn:
+        	c = conn.cursor()
+
+        	for command in commands:
+        	c.execute(command)
+
+
+
 
 
 def insert_db(conn):
@@ -77,6 +83,9 @@ def insert_db(conn):
         c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
 
 
+if __name__ == '__main__':
+    conn = create_connection('retail.db')
+    initilize_db(conn)
 
 
 
