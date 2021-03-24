@@ -85,7 +85,7 @@ def insert_db(conn):
 
 if __name__ == '__main__':
     conn = create_connection('retail.db')
-    initilize_db(conn)
+    initialize_db(conn)
 
 
 
