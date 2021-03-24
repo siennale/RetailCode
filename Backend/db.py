@@ -16,8 +16,8 @@ def create_connection(db_file):
         if conn:
             conn.close()
 
-# Initilize DB
-def initilize_db(conn):
+# Initialize DB
+def initialize_db(conn):
 
 	commands = [("""CREATE TABLE Users (
         	user_id TEXT PRIMARY KEY,
