@@ -12,8 +12,10 @@ class Home extends Component {
         super(props)
         this.state = {
             barcode: 'Please Scan Barcode for Price',
-            price: 10,
-            currentList : ["Apple", "Pop coke"]
+            price: 0,
+            currentList : ["Apple", "Pop coke"],
+            product: {},
+            name: ""
         }
 
         this.handleScan = this.handleScan.bind(this)
@@ -23,11 +25,22 @@ class Home extends Component {
     }
 
     handleScan(data) {
+        console.log("Barcode id: "+ data);
         this.setState({
-            result: data,
+            barcode: data,
         })
 
+        var barcode = data;
 
+        axios.post(`http://127.0.0.1:5000/getPriceByBarcode`, { barcode } )
+            .then(res => {
+                console.log(res.data);
+                this.setState({
+                    product: res.data,
+                    price: res.data[3],
+                    name: res.data[2]
+                })  
+            })
     }
     handleError(err) {
         console.error(err)
@@ -88,6 +101,7 @@ class Home extends Component {
                                         onScan={this.handleScan}
                                     />
                                     <div>{this.state.barcode}</div>
+                                    <div>{this.state.name}</div>
                                     <br></br>
                                     <div class="original-price">${this.state.price}</div>
                                     <br></br>

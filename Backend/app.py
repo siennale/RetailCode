@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 from sqlite3 import Error
-import psycopg2
 import flask
 from flask import request
+from flask import jsonify
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -85,20 +85,16 @@ def insert_db(conn):
 		# c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
 
 def get_price_by_barcode(barcode, conn):
-    c = conn.cursor()
-    product =  c.execute("SELECT 1 FROM Products WHERE product_barcode = " + barcode)
-    print (product)
-    
+	c = conn.cursor()
+	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
+	return c.fetchone()
+	
 
 
 conn = create_connection('retail.db')
-# initialize_db(conn)
+initialize_db(conn)
 
 ######################################################################################################
-
-
-
-
 
 
 @app.route('/', methods=['GET'])
@@ -107,8 +103,10 @@ def home():
 
 
 @app.route('/getPriceByBarcode', methods=['POST'])
-def get_price_by_barcode():
-    print (request.get_json())
+def POST_price_by_barcode():
+    print (request.get_json(), flush=True)
+    with create_connection('retail.db') as conn:
+        return jsonify(get_price_by_barcode(request.get_json()['barcode'], conn))
     
 
 app.run()
