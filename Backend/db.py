@@ -69,17 +69,26 @@ def initialize_db(conn):
 def insert_db(conn):
 	with conn:
 		c = conn.cursor()
-		c.execute("INSERT INTO Users VALUES (?, ?, ?, ?)", ('userid', 'name', 'password'))
-		c.execute("INSERT INTO Products VALUES (?, ?, ?, ?, ?,?,?)", (0, 0, 'name', 0, 0, 0, 0, 0))
-		c.execute("INSERT INTO ProductsIn VALUES (?, ?, ?, ?, ?)", (0, 0, 'product', 0, 0, 0))
-		c.execute("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)", (0, 'userid', 'date', 0, 0))
-		c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
+		# c.execute("INSERT INTO Users VALUES (?, ?, ?, ?)", ('userid', 'name', 'password'))
+		c.execute("INSERT INTO Products VALUES (123456,101,'Icecream', 10, 1, 1,1)")
+		print ("added data")
+		# c.execute("INSERT INTO ProductsIn VALUES (?, ?, ?, ?, ?)", (0, 0, 'product', 0, 0, 0))
+		# c.execute("INSERT INTO Transactions VALUES (?, ?, ?, ?, ?)", (0, 'userid', 'date', 0, 0))
+		# c.execute("INSERT INTO SoldItems VALUES (?, ?, ?, ?)", (0, 0, 0, 0))
+
+def get_price_by_barcode(barcode, conn):
+	c = conn.cursor()
+	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
+	return c.fetchone()
+	
 
 
 if __name__ == '__main__':
 	conn = create_connection('retail.db')
 	initialize_db(conn)
-
+	# insert_db(conn)
+	print (get_price_by_barcode(1, conn))
+	
 
 
 
