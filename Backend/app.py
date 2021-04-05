@@ -110,6 +110,9 @@ def POST_price_by_barcode():
     print (request.get_json(), flush=True)
     with create_connection('retail.db') as conn:
         return jsonify(get_price_by_barcode(request.get_json()['barcode'], conn))
+
+# NEED FUNCTION FOR SAVING THE PRODUCT 
+# e.g data will be given in json { name: "", id: "", etc. } and just need to insert in db
     
 
 app.run()
