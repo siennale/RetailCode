@@ -25,9 +25,10 @@ def initialize_db(conn):
 
 		("""CREATE TABLE IF NOT EXISTS Products (
 			product_id INTEGER PRIMARY KEY,
-			product_barcode INTEGER,
+			product_barcode INTEGER UNIQUE,
 			product_name TEXT,
 			product_selling_price REAL,
+			product_tax INTEGER,
 			product_total_quantity INTEGER,
 			product_sold_quantity INTEGER,
 			product_instock_quantity INTEGER	
@@ -80,7 +81,20 @@ def get_price_by_barcode(barcode, conn):
 	c = conn.cursor()
 	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
 	return c.fetchone()
+
+# def validate_user_info(id,pwd):
+# 	c = conn.cursor()
+# 	c.execute("SELECT password FROM Users WHERE password ="+str(pwd))
+# 	onfu
+# 	onfilePwd = c.fetchone()
+
+# def ingest_data(filename,conn):
+# 	c = conn.cursor()
+
 	
+# def enter_products(json) with 4 parameters: barcode, name, price, tax
+# if exist, update
+# create flask api
 
 
 if __name__ == '__main__':

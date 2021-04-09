@@ -34,9 +34,10 @@ def initialize_db(conn):
 
 		("""CREATE TABLE IF NOT EXISTS Products (
 			product_id INTEGER PRIMARY KEY,
-			product_barcode INTEGER,
+			product_barcode INTEGER UNIQUE,
 			product_name TEXT,
 			product_selling_price REAL,
+			product_tax INTEGER,
 			product_total_quantity INTEGER,
 			product_sold_quantity INTEGER,
 			product_instock_quantity INTEGER	
@@ -89,6 +90,14 @@ def get_price_by_barcode(barcode, conn):
 	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
 	return c.fetchone()
 	
+def set_product(barcode, name, price, tax, conn):
+	c = conn.cursor()
+	try:
+		c.execute("INSERT INTO Products (product_barcode, product_name, product_selling_price, product_tax, product_sold_quantity,product_total_quantity,product_instock_quantity) VALUES (?,?,?,?,?,?,?))",(barcode,name,price,tax,0,0,0))
+		
+		return jsonify(c.fetchall())
+	except Error as ex:
+		return ex
 
 
 conn = create_connection('retail.db')
@@ -110,6 +119,17 @@ def POST_price_by_barcode():
     print (request.get_json(), flush=True)
     with create_connection('retail.db') as conn:
         return jsonify(get_price_by_barcode(request.get_json()['barcode'], conn))
+
+@app.route('/saveProduct', methods=['POST'])
+def POST_save_product():
+	print (request.get_json(), flush=True)
+	# Validation of data
+	data = request.get_json()
+	with create_connection('retail.db') as conn:
+		return set_product(data["barcode"], data["name"], data["price"], data["tax"], conn)
+	return "Failed"
+
+
 
 # NEED FUNCTION FOR SAVING THE PRODUCT 
 # e.g data will be given in json { name: "", id: "", etc. } and just need to insert in db
