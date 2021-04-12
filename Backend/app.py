@@ -5,6 +5,7 @@ from sqlite3 import Error
 import flask
 from flask import request
 from flask import jsonify
+from flask_cors import CORS, cross_origin
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -87,6 +88,7 @@ def insert_db(conn):
 
 def get_price_by_barcode(barcode, conn):
 	c = conn.cursor()
+
 	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
 	return c.fetchone()
 	
@@ -105,7 +107,6 @@ initialize_db(conn)
 
 ######################################################################################################
 ######################################################################################################
-######################################################################################################
 #                                    FLASK CODE GOES BELOW
 ######################################################################################################
 
@@ -115,6 +116,7 @@ def home():
 
 
 @app.route('/getPriceByBarcode', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def POST_price_by_barcode():
     print (request.get_json(), flush=True)
     with create_connection('retail.db') as conn:

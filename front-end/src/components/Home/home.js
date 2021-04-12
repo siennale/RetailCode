@@ -12,8 +12,8 @@ class Home extends Component {
         super(props)
         this.state = {
             barcode: 'Please Scan Barcode for Price',
-            price: 0,
             currentList : ["Apple", "Pop coke"],
+            price : 0,
             product: {},
             name: ""
         }
@@ -32,13 +32,14 @@ class Home extends Component {
 
         var barcode = data;
 
-        axios.post(`http://127.0.0.1:5000/getPriceByBarcode`, { barcode } )
+        axios.post(`http://localhost:5000/getPriceByBarcode`, { barcode } )
             .then(res => {
                 console.log(res.data);
                 this.setState({
                     product: res.data,
                     price: res.data[3],
-                    name: res.data[2]
+                    name: res.data[2],
+                    tax: res.data[4]
                 })  
             })
     }
@@ -103,9 +104,9 @@ class Home extends Component {
                                     <div>{this.state.barcode}</div>
                                     <div>{this.state.name}</div>
                                     <br></br>
-                                    <div class="original-price">${this.state.price}</div>
+                                    { this.state.price != 0 ? <div class="original-price">${this.state.price}</div>: <div>This Item is not in the Product List :(</div>}
                                     <br></br>
-                                    <div> GST${(this.state.price * 0.05 + this.state.price).toFixed(2)}, GST+PST ${(this.state.price * 0.12 + this.state.price).toFixed(2)} </div>
+                                    { this.state.tax ? <div> GST${(this.state.price * 0.05 + this.state.price).toFixed(2)}, GST+PST ${(this.state.price * 0.12 + this.state.price).toFixed(2)} </div> : null}
                                 </div>
                             </div>
                         </div>

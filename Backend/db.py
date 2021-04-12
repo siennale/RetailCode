@@ -98,9 +98,9 @@ def ingestData(conn):
 
 if __name__ == '__main__':
 	conn = create_connection('retail.db')
-	initialize_db(conn)
-	ingestData(conn)
-	print (get_price_by_barcode(815154000000, conn))
+	# initialize_db(conn)
+	# ingestData(conn)
+	print (get_price_by_barcode(64642079992, conn))
 	conn.close()
 
 
