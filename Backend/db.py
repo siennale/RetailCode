@@ -82,27 +82,26 @@ def get_price_by_barcode(barcode, conn):
 	c.execute("SELECT * FROM Products WHERE product_barcode = " + str(barcode))
 	return c.fetchone()
 
-# def validate_user_info(id,pwd):
-# 	c = conn.cursor()
-# 	c.execute("SELECT password FROM Users WHERE password ="+str(pwd))
-# 	onfu
-# 	onfilePwd = c.fetchone()
+from csv import reader
 
-# def ingest_data(filename,conn):
-# 	c = conn.cursor()
+def ingestData(conn):
+	c = conn.cursor()
+	with open('pos_data.csv', 'r') as read_obj:
+		csv_reader = reader(read_obj)
+		for row in csv_reader:
+			print (row)
+			print ("----")
+			c.execute(" INSERT OR IGNORE INTO Products(product_barcode, product_name, product_selling_price, product_tax, product_total_quantity, product_sold_quantity, product_instock_quantity ) VALUES(?,?,?,?,?,?, ?)", row)
 
-	
-# def enter_products(json) with 4 parameters: barcode, name, price, tax
-# if exist, update
-# create flask api
+		conn.commit()
 
 
 if __name__ == '__main__':
 	conn = create_connection('retail.db')
 	initialize_db(conn)
-	# insert_db(conn)
-	print (get_price_by_barcode(1, conn))
-	
+	ingestData(conn)
+	print (get_price_by_barcode(815154000000, conn))
+	conn.close()
 
 
 
