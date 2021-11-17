@@ -45,21 +45,23 @@ def initialize_db(conn):
 
 		# when products out, update products
 		("""CREATE TABLE IF NOT EXISTS SoldItems (
-			product_id INTEGER PRIMARY KEY,
+			sold_item_id INTEGER PRIMARY KEY,
 			product_barcode INTEGER,
-			product_selling_price INTEGER,
 			quantity INTEGER,
-			FOREIGN KEY (product_id) REFERENCES Products(product_id)
+			transaction_id INTEGER,
+			FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id)
 		)"""),
 
 		("""CREATE TABLE IF NOT EXISTS Transactions (
 			transaction_id INTEGER PRIMARY KEY,
 			user_id TEXT,
 			date TEXT,
-			transaction_total REAL,
+			total_items INTEGER,
+			total_sale REAL,
 			bills_offered REAL,
 			FOREIGN KEY (user_id) REFERENCES Users(user_id)
-		)""")]
+		)""")
+		]
 	with conn:
 		c = conn.cursor()
 		for command in commands:
