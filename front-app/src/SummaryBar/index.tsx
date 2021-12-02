@@ -1,26 +1,62 @@
-import React from "react";
-import { Container, Center, Heading, Text, Box } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import {
+  Center,
+  Heading,
+  Text,
+  Box,
+  Button,
+  VStack,
+  HStack,
+} from "@chakra-ui/react";
 
-export default function SummaryBar() {
+export default function SummaryBar(props) {
   return (
-    <Container maxW="container.xl" alignContent="center">
-      <Box>
-        <Center verticalAlign="true">
-          <Heading as="i">Item</Heading>
-        </Center>
-        <Center verticalAlign="true">
-          <Text fontSize="lg">Pop</Text>
-        </Center>
-        <Center verticalAlign="true">
-          <Text fontSize="lg">$56</Text>
-        </Center>
-        <Center verticalAlign="true">
-          <Text fontSize="lg">Tax GST = $5 PST = $4</Text>
-        </Center>
-        <Center verticalAlign="true">
-          <Text fontSize="lg">Total $59</Text>
-        </Center>
-      </Box>
-    </Container>
+    <VStack w="full" h="full">
+      <HStack h="full">
+        <Box>
+          <Center verticalAlign="true">
+            <Heading>Item</Heading>
+          </Center>
+          <Center verticalAlign="true">
+            <Text fontSize="lg">{props.itemName}</Text>
+          </Center>
+          <Center verticalAlign="true">
+            <Text fontSize="lg">$ {props.price}</Text>
+          </Center>
+          <Center verticalAlign="true">
+            <Text fontSize="lg">
+              Tax GST = ${props.gst} PST = ${props.pst}
+            </Text>
+          </Center>
+          <Center verticalAlign="true">
+            <Text fontSize="lg">Total $ {props.total}</Text>
+          </Center>
+        </Box>
+      </HStack>
+      <HStack>
+        <Box>
+          <Button
+            colorScheme="teal"
+            size="md"
+            p={3}
+            m={4}
+            variant="outline"
+            onClick={props.reset}
+          >
+            Done
+          </Button>
+          <Button
+            colorScheme="teal"
+            size="md"
+            p={3}
+            m={4}
+            variant="outline"
+            onClick={props.reset}
+          >
+            Reset
+          </Button>
+        </Box>
+      </HStack>
+    </VStack>
   );
 }

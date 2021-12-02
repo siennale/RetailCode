@@ -14,30 +14,29 @@ import {
   Td,
   TableCaption,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
-export default function MainSideBar() {
+export default function MainSideBar(props) {
+  const data = props.scanData;
+  const [totalPrice, settotalPrice] = useState(0);
+
+  useEffect(() => {
+    let total = 0;
+    data.forEach((row) => {
+      total += row.data[4] ? row.data[3] * 1.12 : row.data[3];
+    });
+    settotalPrice(total);
+    return () => {
+      settotalPrice(0);
+    };
+  }, [props]);
+
+  console.log(data);
   return (
     <Box w="full">
       <Text fontSize="md" p={2}>
         Summary
       </Text>
-      {/* <Grid templateColumns="repeat(4, 1fr)" gap={6} p={2}>
-        <GridItem colSpan={2}>
-          <Text as="i" fontSize="sm">
-            Items
-          </Text>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Text fontSize="sm" as="i">
-            Qty
-          </Text>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Text fontSize="sm" as="i">
-            Price
-          </Text>
-        </GridItem>
-      </Grid> */}
       <Table size="sm">
         <Thead>
           <Tr>
@@ -47,29 +46,25 @@ export default function MainSideBar() {
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
-            <Td>inches inches inches inchedc</Td>
-            <Td isNumeric>25.4</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>inches inches inches inchedc</Td>
-            <Td isNumeric>25.4</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>inches inches inches inchedc</Td>
-            <Td isNumeric>25.4</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
+          {data.map((rowValue) => (
+            <Tr>
+              <Td>{rowValue.data[2]}</Td>
+              <Td isNumeric>1</Td>
+              <Td isNumeric>
+                {(rowValue.data[4]
+                  ? rowValue.data[3] * 1.12
+                  : rowValue.data[3]
+                ).toFixed(2)}
+              </Td>
+            </Tr>
+          ))}
         </Tbody>
-        {/* <Tfoot>
+        <Tfoot>
           <Tr>
             <Th>Total</Th>
-            <Th></Th>
-            <Th isNumeric>multiply by</Th>
+            <Th isNumeric>{totalPrice.toFixed(2)}</Th>
           </Tr>
-        </Tfoot> */}
+        </Tfoot>
       </Table>
     </Box>
   );
