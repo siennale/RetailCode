@@ -1,15 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
+import os
 import sqlite3
 from sqlite3 import Error
 import datetime
 import flask
-from flask import request
-from flask import jsonify
+from flask import request, send_from_directory, jsonify
 from flask_cors import CORS, cross_origin
 from utils.db_helper import create_connection, initialize_db
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder='build')
 app.config["DEBUG"] = True
 
 
@@ -21,9 +21,16 @@ initialize_db(conn)
 ######################################################################################################
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return "<h1>POS system</h1><p>This site is a prototype API for POS.</p>"
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        print (app.static_folder)
+        return send_from_directory(app.static_folder, 'index.html')
+
 
 
 from routes import order
