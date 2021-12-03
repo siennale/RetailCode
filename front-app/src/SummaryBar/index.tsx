@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   Center,
   Heading,
@@ -8,14 +7,15 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
+import "@fontsource/raleway/400.css";
 
 export default function SummaryBar(props) {
   return (
     <VStack w="full" h="full">
       <HStack h="full">
         <Box>
-          <Center verticalAlign="true">
-            <Heading>Item</Heading>
+          <Center verticalAlign="true" p={2} m={3}>
+            <Heading fontFamily="">Item</Heading>
           </Center>
           <Center verticalAlign="true">
             <Text fontSize="lg">{props.itemName}</Text>

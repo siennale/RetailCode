@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChakraProvider, Box } from "@chakra-ui/react";
 import Navbar from "./Navbar/index";
 import MainSideBar from "./MainSideBar";
 import SummaryBar from "./SummaryBar";
-import {
-  Divider,
-  Center,
-  Grid,
-  GridItem,
-  Stack,
-  HStack,
-  VStack,
-  StackDivider,
-} from "@chakra-ui/react";
+import { Divider, Grid, HStack, VStack } from "@chakra-ui/react";
 import BarcodeReader from "react-barcode-reader";
 import axios from "axios";
 
@@ -36,7 +27,7 @@ const calculateName = (scanValue) => {
   if (scanValue && scanValue.data && scanValue.data[2]) {
     return scanValue.data[2];
   } else {
-    return "Scan the Item";
+    return "Scan The Item OR Item not found ";
   }
 };
 
@@ -51,8 +42,6 @@ const calculatePrice = (scanValue) => {
 const calculateTotal = (scanValue) => {
   if (scanValue && scanValue.data && scanValue.data[4]) {
     return (scanValue.data[3] * 1.12).toFixed(2);
-  } else if (scanValue && scanValue.data && !scanValue.data[4]) {
-    return scanValue.data[3];
   } else {
     return "0";
   }
@@ -60,27 +49,27 @@ const calculateTotal = (scanValue) => {
 
 export default function App() {
   const [scanData, setScanData] = useState([]);
-  const [gst, setGST] = useState(calculateGST(null));
-  const [pst, setPST] = useState(calculatePST(null));
-  const [itemName, setItemName] = useState(calculateName(null));
-  const [price, setPrice] = useState(calculatePrice(null));
-  const [total, setTotal] = useState(calculateTotal(null));
+  const [gst, setGST] = useState(calculateGST(0));
+  const [pst, setPST] = useState(calculatePST(0));
+  const [itemName, setItemName] = useState(calculateName(0));
+  const [price, setPrice] = useState(calculatePrice(0));
+  const [total, setTotal] = useState(calculateTotal(0));
 
   const resetData = () => {
     setScanData([]);
-    setGST(calculateGST(null));
-    setPST(calculatePST(null));
-    setItemName(calculateName(null));
-    setPrice(calculatePrice(null));
-    setTotal(calculateTotal(null));
+    setGST(calculateGST(0));
+    setPST(calculatePST(0));
+    setItemName(calculateName(0));
+    setPrice(calculatePrice(0));
+    setTotal(calculateTotal(0));
   };
 
   const handleScan = (data) => {
-    console.log("here is the scanned data: " + data);
     axios
       .get("http://localhost:5001/product?barcode=" + data)
       .then((res: any) => {
-        setScanData(scanData.concat(res));
+        if (res.data != null) setScanData(scanData.concat(res));
+        if (scanData.length > 15) setScanData([]);
         setGST(calculateGST(res));
         setPST(calculatePST(res));
         setItemName(calculateName(res));

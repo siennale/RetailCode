@@ -1,10 +1,6 @@
 import {
   Box,
   Text,
-  VStack,
-  HStack,
-  Grid,
-  GridItem,
   Table,
   Thead,
   Tbody,
@@ -12,7 +8,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
@@ -23,15 +18,16 @@ export default function MainSideBar(props) {
   useEffect(() => {
     let total = 0;
     data.forEach((row) => {
-      total += row.data[4] ? row.data[3] * 1.12 : row.data[3];
+      if (row.data) {
+        total += row.data[4] ? row.data[3] * 1.12 : row.data[3];
+      }
     });
     settotalPrice(total);
     return () => {
       settotalPrice(0);
     };
-  }, [props]);
+  }, [props, data]);
 
-  console.log(data);
   return (
     <Box w="full">
       <Text fontSize="md" p={2}>
@@ -46,8 +42,8 @@ export default function MainSideBar(props) {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((rowValue) => (
-            <Tr>
+          {data.map((rowValue, idx) => (
+            <Tr key={idx}>
               <Td>{rowValue.data[2]}</Td>
               <Td isNumeric>1</Td>
               <Td isNumeric>
