@@ -30,7 +30,7 @@ def set_transaction(user_id, total_sale, total_item, conn):
 def set_sold_items(items, transaction_id, conn):
     c = conn.cursor()
     for barcode, qty in items:
-        print(str(barcode) + " " + str(qty), flush=True)
+        print(str(barcode) + " " + str(qty))
         c.execute("INSERT INTO SoldItems (product_barcode, quantity, transaction_id) VALUES(?,?,?)",
                   (barcode, qty, transaction_id))
     conn.commit()
@@ -57,7 +57,7 @@ def POST_save_order():
             }
     }
     """
-    print(request.get_json(), flush=True)
+    print(request.get_json())
     data = request.get_json()
     try:
         with create_connection('retail.db') as conn:

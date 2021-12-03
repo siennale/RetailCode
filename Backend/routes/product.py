@@ -40,7 +40,7 @@ def set_product(barcode, name, price, tax, total_qty, total_sold_qty, total_inst
 @app.route('/product', methods=['GET'])
 @cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
 def POST_price_by_barcode():
-    print(request.args.get('barcode'), flush=True)
+    print(request.args.get('barcode'))
     barcode = request.args.get('barcode')
     if (not barcode):
         return jsonify({"result": "Pelase provide any detail of the product in query"})
@@ -63,7 +63,7 @@ def POST_save_product():
     except KeyError:
         return "Make sure you have all keys are correct"
     except Error as ex:
-        print(ex, flush=True)
+        print(ex)
         return "Failed with serverside issue"
     except:
         return "unknow issue"
